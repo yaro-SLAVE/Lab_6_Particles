@@ -11,10 +11,27 @@ namespace Lab_6_Particles
     {
         public List<Particle> particles = new List<Particle>();
         public List<IImpactPoint> impactPoints = new List<IImpactPoint>();
-        private int mousePositionX;
-        private int mousePositionY;
-        private float gravitationX = 0;
-        private float gravitationY = 0;
+        protected int mousePositionX;
+        protected int mousePositionY;
+        protected float gravitationX = 0;
+        protected float gravitationY = 1;
+        protected int particlesCount = 500;
+
+        public int X;
+        public int Y;
+        public int Direction = 0;
+        public int Spreading = 360;
+        public int SpeedMin = 1;
+        public int SpeedMax = 10;
+        public int RadiusMin = 2;
+        public int RadiusMax = 10;
+        public int HpMin = 20;
+        public int HpMax = 100;
+
+        public int ParticlesPerTick = 1;
+
+        public Color ColorFrom = Color.White;
+        public Color ColorTo = Color.FromArgb(0, Color.Black);
 
         public int MousePositionX
         {
@@ -40,30 +57,30 @@ namespace Lab_6_Particles
             set => gravitationY = value;
         }
 
+        public int ParticlesCount
+        {
+            get => particlesCount;
+            set => particlesCount = value;
+        }
+
         public void UpdateState()
         {
+            int particlesToCreate = ParticlesPerTick;
             foreach (var particle in particles)
             {
-                particle.Hp -= 1;
-
                 if (particle.Hp < 0)
                 {
-                    particle.Hp = 20 + Particle.rand.Next(100);
-
-                    particle.X = mousePositionX;
-                    particle.Y = mousePositionY;
-
-                    var direction = (double)Particle.rand.Next(360);
-                    var speed = 1 + Particle.rand.Next(10);
-
-                    particle.SpeedX = (float)(Math.Cos(direction / 180 * Math.PI) * speed);
-                    particle.SpeedY = -(float)(Math.Sin(direction / 180 * Math.PI) * speed);
-
-                    particle.Radius = 2 + Particle.rand.Next(10);
-
+                    if (particlesToCreate > 0)
+                    {
+                        particlesToCreate -= 1;
+                        ResetParticle(particle);
+                    }
                 }
                 else
                 {
+                    particle.X += particle.SpeedX;
+                    particle.Y += particle.SpeedY;
+
                     foreach (var point in impactPoints)
                     {
                         point.ImpactParticle(particle);
@@ -71,30 +88,15 @@ namespace Lab_6_Particles
 
                     particle.SpeedX += GravitationX;
                     particle.SpeedY += GravitationY;
-
-                    particle.X += particle.SpeedX;
-                    particle.Y += particle.SpeedY;
                 }
             }
 
-            for (var i = 0; i < 10; ++i)
+            while (particlesToCreate >= 1)
             {
-                if (particles.Count < 500)
-                {
-                    var particle = new ParticleColorful();
-
-                    particle.FromColor = Color.Yellow;
-                    particle.ToColor = Color.FromArgb(0, Color.Magenta);
-
-                    particle.X = mousePositionX;
-                    particle.Y = mousePositionY;
-
-                    particles.Add(particle);
-                }
-                else
-                {
-                    break;
-                }
+                particlesToCreate -= 1;
+                var particle1 = CreateParticle();
+                ResetParticle(particle1);
+                particles.Add(particle1);
             }
         }
 
@@ -109,6 +111,32 @@ namespace Lab_6_Particles
             {
                 point.Render(g);
             }
+        }
+
+        public virtual void ResetParticle(Particle particle)
+        {
+            particle.Hp = Particle.rand.Next(HpMin, HpMax);
+
+            particle.X = X;
+            particle.Y = Y;
+
+            var direction = Direction + (double)Particle.rand.Next(Spreading) - Spreading / 2;
+
+            var speed = Particle.rand.Next(SpeedMin, SpeedMax);
+
+            particle.SpeedX = (float)(Math.Cos(direction / 180 * Math.PI) * speed);
+            particle.SpeedY = -(float)(Math.Sin(direction / 180 * Math.PI) * speed);
+
+            particle.Radius = Particle.rand.Next(RadiusMin, RadiusMax);
+        }
+
+        public virtual Particle CreateParticle()
+        {
+            var particle = new ParticleColorful();
+            particle.FromColor = ColorFrom;
+            particle.ToColor = ColorTo;
+
+            return particle;
         }
     }
 }
