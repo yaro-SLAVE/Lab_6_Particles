@@ -13,14 +13,15 @@ namespace Lab_6_Particles
 {
     public partial class SolarSistemForm : Form
     {
-        private BaseSpaceObject Solar;
+        private Sun sun;
+
         public SolarSistemForm()
         {
             InitializeComponent();
 
             display.Image = new Bitmap(display.Width, display.Height);
 
-            Solar = new BaseSpaceObject(50, display.Width / 2, display.Height / 2, Color.Yellow, 10);
+            sun = new Sun(display.Width / 2, display.Height / 2);
         }
 
         private void displayTimer_Tick(object sender, EventArgs e)
@@ -28,7 +29,7 @@ namespace Lab_6_Particles
             using (var g = Graphics.FromImage(display.Image))
             {
                 g.Clear(Color.Black);
-                Solar.Render(g);
+                sun.Render(g);
             }
 
             display.Invalidate();

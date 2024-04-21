@@ -13,17 +13,9 @@ namespace Lab_6_Particles.SpaceObjects
         public Color colorField;
         public int Damage = 0;
         public int Power;
-        protected int Weight;
-
-        public BaseSpaceObject(int radius, float x, float y, Color color, int weight)
-        {
-            Radius = radius;
-            X = x;
-            Y = y;
-            Weight = weight;
-            Power = Radius * weight;
-            this.colorField = color;
-        }
+        public int Weight;
+        public float PerihelionRadius = 0; //наибольшое расстояние от центра объекта до центра объекта вокруг которого вращается
+        protected float G = 1.5f;
 
         public void Render(Graphics g)
         {
@@ -36,17 +28,17 @@ namespace Lab_6_Particles.SpaceObjects
             b.Dispose();
         }
 
-        public void ImpactParticle(Particle particle)
+        public void ObjectAttractio(BaseSpaceObject spaceObject)
         {
-            float gX = X - particle.X;
-            float gY = Y - particle.Y;
+            float gX = X - spaceObject.X;
+            float gY = Y - spaceObject.Y;
 
             double r = Math.Sqrt(gX * gX + gY * gY);
-            if (r + particle.Radius < Power / 2)
+            if (r + spaceObject.Radius < Power / 2)
             {
                 float r2 = (float)Math.Max(100, gX * gX + gY * gY);
-                particle.SpeedX += gX * Power / r2;
-                particle.SpeedY += gY * Power / r2;
+                spaceObject.SpeedX += gX * Power / r2;
+                spaceObject.SpeedY += gY * Power / r2;
             }
         }
     }

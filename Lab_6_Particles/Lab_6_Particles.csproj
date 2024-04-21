@@ -66,7 +66,11 @@
     <Compile Include="SolarSistemForm.Designer.cs">
       <DependentUpon>SolarSistemForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SpaceObjects\Asteroid.cs" />
     <Compile Include="SpaceObjects\BaseSpaceObject.cs" />
+    <Compile Include="SpaceObjects\Planet.cs" />
+    <Compile Include="SpaceObjects\Satellite.cs" />
+    <Compile Include="SpaceObjects\Sun.cs" />
     <Compile Include="TopEmitter.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
@@ -95,6 +99,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ObjectsGroups\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
