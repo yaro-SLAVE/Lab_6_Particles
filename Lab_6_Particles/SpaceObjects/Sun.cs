@@ -13,7 +13,7 @@ namespace Lab_6_Particles.SpaceObjects
         {
             X = x;
             Y = y;
-            Radius = 30;
+            Radius = 45;
             Weight = 100;
             Power = Weight + Radius;
             colorField = Color.Yellow;

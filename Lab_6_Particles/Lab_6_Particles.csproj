@@ -56,6 +56,9 @@
     </Compile>
     <Compile Include="GravityPoint.cs" />
     <Compile Include="IImpactPoint.cs" />
+    <Compile Include="ObjectsGroups\GroupOfGroups.cs" />
+    <Compile Include="ObjectsGroups\GroupOfObjects.cs" />
+    <Compile Include="ObjectsGroups\ObjectGroup.cs" />
     <Compile Include="Particle.cs" />
     <Compile Include="ParticleColorful.cs" />
     <Compile Include="Program.cs" />
@@ -100,8 +103,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ObjectsGroups\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

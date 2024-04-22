@@ -19,7 +19,7 @@ namespace Lab_6_Particles.SpaceObjects
 
         public void Render(Graphics g)
         {
-            int alpha = 255 - Damage;
+            var alpha = 255 - Damage;
             var color = Color.FromArgb(alpha, colorField);
             var b = new SolidBrush(color);
 
