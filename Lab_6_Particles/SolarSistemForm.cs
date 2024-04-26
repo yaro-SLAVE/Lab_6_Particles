@@ -29,11 +29,13 @@ namespace Lab_6_Particles
                 Y = display.Height / 2
             };
 
-            SolarSistem.groups.Add(new GroupOfObjects(display.Width / 2, SolarSistem.Y + SolarSistem.centralObject.Radius, 40, 10, Color.Maroon));
+            SolarSistem.groups.Add(new GroupOfObjects(SolarSistem.X, SolarSistem.Y, 90, 10, Color.Maroon));
 
-            SolarSistem.groups.Add(new GroupOfObjects(display.Width / 2, SolarSistem.Y + SolarSistem.centralObject.Radius, 90, 20, Color.Brown));
+            SolarSistem.groups.Add(new GroupOfObjects(SolarSistem.X, SolarSistem.Y, 140, 20, Color.Brown));
 
-            SolarSistem.groups.Add(new GroupOfObjects(display.Width / 2, SolarSistem.Y + SolarSistem.centralObject.Radius, 180, 20, Color.Blue));
+            SolarSistem.groups.Add(new GroupOfObjects(SolarSistem.X, SolarSistem.Y, 240, 20, Color.Blue));
+
+            SolarSistem.groups.ElementAt(2).objects.Add(new Satellite(SolarSistem.groups.ElementAt(2).X, SolarSistem.groups.ElementAt(2).Y, 30, 10, Color.LightGray));
         }
 
         private void displayTimer_Tick(object sender, EventArgs e)
@@ -42,6 +44,8 @@ namespace Lab_6_Particles
             {
                 g.Clear(Color.Black);
                 SolarSistem.Render(g);
+                SolarSistem.ObjectAttraction();
+                SolarSistem.UpdateState();
             }
 
             display.Invalidate();

@@ -6,15 +6,17 @@ namespace Lab_6_Particles.SpaceObjects
     public class BaseSpaceObject
     {
         public int Radius;
-        public float SpeedX;
-        public float SpeedY;
+        public float MoveX;
+        public float MoveY;
         public float X;
         public float Y;
         public Color colorField;
         public int Damage = 0;
         public int Power;
         public int Weight;
-        public float PerihelionRadius = 0; //наибольшое расстояние от центра объекта до центра объекта вокруг которого вращается
+        public int PerihelionRadius = 0; //наибольшое расстояние от центра объекта до центра объекта вокруг которого вращается
+        public float AnglePosition = 270;
+        protected float AngleTick = 2;
         protected float G = 1.5f;
 
         public void Render(Graphics g)
@@ -28,18 +30,18 @@ namespace Lab_6_Particles.SpaceObjects
             b.Dispose();
         }
 
-        public void ObjectAttractio(BaseSpaceObject spaceObject)
+        public void ObjectAttraction(BaseSpaceObject spaceObject)
         {
-            float gX = X - spaceObject.X;
-            float gY = Y - spaceObject.Y;
+            spaceObject.AnglePosition = (spaceObject.AnglePosition + spaceObject.AngleTick) % 360;
 
-            double r = Math.Sqrt(gX * gX + gY * gY);
-            if (r + spaceObject.Radius < Power / 2)
-            {
-                float r2 = (float)Math.Max(100, gX * gX + gY * gY);
-                spaceObject.SpeedX += gX * Power / r2;
-                spaceObject.SpeedY += gY * Power / r2;
-            }
+            spaceObject.MoveX = this.X + (float)(Math.Cos(spaceObject.AnglePosition / 180 * Math.PI) * spaceObject.PerihelionRadius);
+            spaceObject.MoveY = this.Y - (float)(Math.Sin(spaceObject.AnglePosition / 180 * Math.PI) * spaceObject.PerihelionRadius);
+        }
+
+        public void UpdateState()
+        {
+            X = MoveX;
+            Y = MoveY;
         }
     }
 }

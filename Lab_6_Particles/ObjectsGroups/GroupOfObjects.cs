@@ -10,7 +10,7 @@ namespace Lab_6_Particles.ObjectsGroups
 {
     public class GroupOfObjects : ObjectGroup
     {
-        public List<BaseSpaceObject> objects = new List<BaseSpaceObject>();
+        public List<Satellite> objects = new List<Satellite>();
 
         public GroupOfObjects(float X, float Y, int PerihelionRadius, int Radius, Color color)
         {
@@ -27,6 +27,26 @@ namespace Lab_6_Particles.ObjectsGroups
             foreach (BaseSpaceObject obj in objects)
             {
                 obj.Render(g);
+            }
+        }
+
+        public override void UpdateState()
+        {
+            centralObject.UpdateState();
+            this.X = centralObject.X;
+            this.Y = centralObject.Y;
+
+            foreach (BaseSpaceObject obj in objects)
+            {
+                obj.UpdateState();
+            }
+        }
+
+        public override void ObjectAttraction()
+        {
+            foreach (BaseSpaceObject obj in objects)
+            {
+                centralObject.ObjectAttraction(obj);
             }
         }
     }

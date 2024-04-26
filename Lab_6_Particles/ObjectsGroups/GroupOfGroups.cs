@@ -10,7 +10,7 @@ namespace Lab_6_Particles.ObjectsGroups
 {
     public class GroupOfGroups : ObjectGroup
     {
-        public List<ObjectGroup> groups = new List<ObjectGroup>();
+        public List<GroupOfObjects> groups = new List<GroupOfObjects>();
 
         public override void Render(Graphics g)
         {
@@ -19,6 +19,22 @@ namespace Lab_6_Particles.ObjectsGroups
             foreach (ObjectGroup group in groups)
             {
                 group.Render(g);
+            }
+        }
+
+        public override void UpdateState()
+        {
+            foreach (ObjectGroup group in groups)
+            {
+                group.UpdateState();
+            }
+        }
+
+        public override void ObjectAttraction()
+        {
+            foreach (ObjectGroup group in groups)
+            {
+                this.centralObject.ObjectAttraction(group.centralObject);
             }
         }
     }

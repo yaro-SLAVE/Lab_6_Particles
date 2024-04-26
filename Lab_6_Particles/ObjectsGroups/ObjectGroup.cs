@@ -22,5 +22,15 @@ namespace Lab_6_Particles.ObjectsGroups
         {
             centralObject.Render(g);
         }
+
+        public virtual void UpdateState() 
+        { 
+
+        }
+
+        public virtual void ObjectAttraction()
+        {
+
+        }
     }
 }
