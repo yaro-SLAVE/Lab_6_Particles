@@ -16,8 +16,8 @@ namespace Lab_6_Particles.SpaceObjects
         public int Weight;
         public int PerihelionRadius = 0; //наибольшое расстояние от центра объекта до центра объекта вокруг которого вращается
         public float AnglePosition = 270;
-        protected float AngleTick = 2;
-        protected float G = 1.5f;
+        public float AngleTick = 2;
+        public float G = 1.5f;
 
         public void Render(Graphics g)
         {
@@ -30,7 +30,7 @@ namespace Lab_6_Particles.SpaceObjects
             b.Dispose();
         }
 
-        public void ObjectAttraction(BaseSpaceObject spaceObject)
+        public virtual void ObjectAttraction(BaseSpaceObject spaceObject)
         {
             spaceObject.AnglePosition = (spaceObject.AnglePosition + spaceObject.AngleTick) % 360;
 

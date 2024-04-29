@@ -32,8 +32,10 @@ namespace Lab_6_Particles.ObjectsGroups
 
         public override void ObjectAttraction()
         {
-            foreach (ObjectGroup group in groups)
+            foreach (GroupOfObjects group in groups)
             {
+                group.ObjectAttraction();
+
                 this.centralObject.ObjectAttraction(group.centralObject);
             }
         }

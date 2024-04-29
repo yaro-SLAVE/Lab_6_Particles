@@ -36,7 +36,7 @@ namespace Lab_6_Particles.ObjectsGroups
             this.X = centralObject.X;
             this.Y = centralObject.Y;
 
-            foreach (BaseSpaceObject obj in objects)
+            foreach (Satellite obj in objects)
             {
                 obj.UpdateState();
             }
@@ -44,7 +44,7 @@ namespace Lab_6_Particles.ObjectsGroups
 
         public override void ObjectAttraction()
         {
-            foreach (BaseSpaceObject obj in objects)
+            foreach (Satellite obj in objects)
             {
                 centralObject.ObjectAttraction(obj);
             }
