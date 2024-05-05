@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace Lab_6_Particles.SpaceObjects
 {
@@ -10,6 +11,8 @@ namespace Lab_6_Particles.SpaceObjects
         public float MoveY;
         public float X;
         public float Y;
+        public float XCenter;
+        public float YCenter;
         public Color colorField;
         public int Damage = 0;
         public int Power;
@@ -18,6 +21,9 @@ namespace Lab_6_Particles.SpaceObjects
         public float AnglePosition = 270;
         public float AngleTick = 2;
         public float G = 1.5f;
+
+        public Action<BaseSpaceObject, BaseSpaceObject> onOverlapGravitationZone;
+        public Action<BaseSpaceObject, BaseSpaceObject> onOverlapObject;
 
         public void Render(Graphics g)
         {
@@ -42,6 +48,48 @@ namespace Lab_6_Particles.SpaceObjects
         {
             X = MoveX;
             Y = MoveY;
+        }
+
+        public virtual void overlap(BaseSpaceObject obj)
+        {
+            if (this.onOverlapGravitationZone != null)
+            {
+                this.onOverlapGravitationZone(this, obj);
+            }
+
+            if (this.onOverlapObject != null)
+            {
+                this.onOverlapObject(this, obj);
+            }
+        }
+
+        public virtual bool overlapsGravitationZone(BaseSpaceObject obj, Graphics g)
+        {
+            return true;
+        }
+
+        public virtual bool overlapsObject(BaseSpaceObject obj, Graphics g)
+        {
+            return true;
+        }
+
+        public GraphicsPath getGravitationZoneGraphicsPath()
+        {
+            var path = new GraphicsPath();
+            path.AddEllipse(-(this.Radius + this.Power), -(this.Radius + this.Power), (this.Radius + this.Power) * 2, (this.Radius + this.Power) * 2);
+            return path;
+        }
+
+        public GraphicsPath getObjectGraphicsPath()
+        {
+            var path = new GraphicsPath();
+            path.AddEllipse(-this.Radius, -this.Radius, this.Radius * 2, this.Radius * 2);
+            return path;
+        }
+
+        public void impactObject(BaseSpaceObject obj)
+        {
+
         }
     }
 }
