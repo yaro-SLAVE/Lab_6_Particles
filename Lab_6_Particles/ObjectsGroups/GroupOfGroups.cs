@@ -39,5 +39,15 @@ namespace Lab_6_Particles.ObjectsGroups
                 this.centralObject.ObjectAttraction(group.centralObject);
             }
         }
+
+        public void ImpactObject(BaseSpaceObject spaceObject)
+        {
+            this.centralObject.ImpactObject(spaceObject);
+
+            foreach (ObjectGroup group in this.groups)
+            {
+                group.centralObject.ImpactObject(spaceObject);
+            }
+        }
     }
 }

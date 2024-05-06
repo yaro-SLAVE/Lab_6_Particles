@@ -75,6 +75,7 @@
             this.readyButton.TabIndex = 3;
             this.readyButton.Text = "Подготовить астероид";
             this.readyButton.UseVisualStyleBackColor = true;
+            this.readyButton.Click += new System.EventHandler(this.readyButton_Click);
             // 
             // displayTimer
             // 
@@ -84,18 +85,20 @@
             // 
             // pullButton
             // 
+            this.pullButton.Enabled = false;
             this.pullButton.Location = new System.Drawing.Point(1393, 239);
             this.pullButton.Name = "pullButton";
             this.pullButton.Size = new System.Drawing.Size(173, 61);
             this.pullButton.TabIndex = 4;
             this.pullButton.Text = "Запустить астероид";
             this.pullButton.UseVisualStyleBackColor = true;
+            this.pullButton.Click += new System.EventHandler(this.pullButton_Click);
             // 
             // SolarSistemForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1547, 944);
+            this.ClientSize = new System.Drawing.Size(1677, 944);
             this.Controls.Add(this.pullButton);
             this.Controls.Add(this.readyButton);
             this.Controls.Add(this.trackBar2);

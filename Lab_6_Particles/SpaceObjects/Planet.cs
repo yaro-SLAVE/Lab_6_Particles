@@ -17,7 +17,11 @@ namespace Lab_6_Particles.SpaceObjects
             this.Y = Y + PerihelionRadius;
             this.colorField = color;
 
-            this.AngleTick = 550 / PerihelionRadius;
+            this.AngleTick = 600 / PerihelionRadius;
+
+            this.Power = (float)(15 * Radius);
+
+            this.Weight = Radius * 50;
         }
     }
 }

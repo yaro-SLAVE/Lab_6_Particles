@@ -13,17 +13,19 @@ namespace Lab_6_Particles.SpaceObjects
         public float Y;
         public float XCenter;
         public float YCenter;
+        public float SpeedX;
+        public float SpeedY;
         public Color colorField;
         public int Damage = 0;
-        public int Power;
+        public float Power;
         public int Weight;
         public int PerihelionRadius = 0; //наибольшое расстояние от центра объекта до центра объекта вокруг которого вращается
         public float AnglePosition = 270;
         public float AngleTick = 2;
         public float G = 1.5f;
 
-        public Action<BaseSpaceObject, BaseSpaceObject> onOverlapGravitationZone;
-        public Action<BaseSpaceObject, BaseSpaceObject> onOverlapObject;
+        public Action<BaseSpaceObject, BaseSpaceObject> onGravitationZoneOverlap;
+        public Action<BaseSpaceObject, BaseSpaceObject> onObjectOverlap;
 
         public void Render(Graphics g)
         {
@@ -44,7 +46,7 @@ namespace Lab_6_Particles.SpaceObjects
             spaceObject.MoveY = this.Y - (float)(Math.Sin(spaceObject.AnglePosition / 180 * Math.PI) * spaceObject.PerihelionRadius);
         }
 
-        public void UpdateState()
+        public virtual void UpdateState()
         {
             X = MoveX;
             Y = MoveY;
@@ -52,14 +54,14 @@ namespace Lab_6_Particles.SpaceObjects
 
         public virtual void overlap(BaseSpaceObject obj)
         {
-            if (this.onOverlapGravitationZone != null)
+            if (this.onGravitationZoneOverlap != null)
             {
-                this.onOverlapGravitationZone(this, obj);
+                this.onGravitationZoneOverlap(this, obj);
             }
 
-            if (this.onOverlapObject != null)
+            if (this.onObjectOverlap != null)
             {
-                this.onOverlapObject(this, obj);
+                this.onObjectOverlap(this, obj);
             }
         }
 
@@ -87,9 +89,18 @@ namespace Lab_6_Particles.SpaceObjects
             return path;
         }
 
-        public void impactObject(BaseSpaceObject obj)
+        public void ImpactObject(BaseSpaceObject obj)
         {
+            float gX = X - obj.X;
+            float gY = Y - obj.Y;
 
+            double r = Math.Sqrt(gX * gX + gY * gY);
+            if (r + obj.Radius < Power)
+            {
+                float r2 = (float)Math.Max(100, gX * gX + gY * gY);
+                obj.SpeedX += gX * Power / r2;
+                obj.SpeedY += gY * Power / r2;
+            }
         }
     }
 }
