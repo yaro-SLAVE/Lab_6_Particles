@@ -91,7 +91,9 @@ namespace Lab_6_Particles
                     int startX = display.Width;
                     int startY = display.Height / 2;
                     int finishX = 0;
-                    int finishY = 0;
+                    double c = (double)startX / Math.Cos((double)trackBar2.Value / 180 * Math.PI);
+                    double sqrH = Math.Pow(c, 2) - Math.Pow((double)startX, 2);
+                    int finishY = (int)((double)startY - Math.Sqrt(sqrH));
 
                     g.DrawLine(new Pen(Color.Orange),
                         startX, startY, finishX, finishY);
