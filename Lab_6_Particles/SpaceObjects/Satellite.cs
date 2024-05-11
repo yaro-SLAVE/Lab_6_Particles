@@ -9,6 +9,8 @@ namespace Lab_6_Particles.SpaceObjects
 {
     public class Satellite : BaseSpaceObject
     {
+        public int StandartPerihelionRadius = 45;
+
         public Satellite(float X, float Y, int PerihelionRadius, int Radius, Color color, float AnglePosition) 
         {
             this.X = X;
@@ -16,7 +18,7 @@ namespace Lab_6_Particles.SpaceObjects
             this.PerihelionRadius = PerihelionRadius;
             this.Y = Y + PerihelionRadius;
             this.colorField = color;
-            this.AngleTick = 500 / PerihelionRadius;
+            this.AngleTick = 500 / StandartPerihelionRadius;
             this.AnglePosition = AnglePosition;
         }
     }

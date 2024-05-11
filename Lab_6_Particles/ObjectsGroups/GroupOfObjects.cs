@@ -11,6 +11,7 @@ namespace Lab_6_Particles.ObjectsGroups
     public class GroupOfObjects : ObjectGroup
     {
         public List<Satellite> objects = new List<Satellite>();
+        private static Random rand = new Random();
 
         public GroupOfObjects(float X, float Y, int PerihelionRadius, int Radius, Color color)
         {
@@ -24,9 +25,13 @@ namespace Lab_6_Particles.ObjectsGroups
         {
             base.Render(g);
 
-            foreach (BaseSpaceObject obj in objects)
+            foreach (Satellite obj in objects)
             {
                 obj.Render(g);
+                if (obj.PerihelionRadius < obj.StandartPerihelionRadius)
+                {
+                    obj.PerihelionRadius += 1;
+                }
             }
         }
 
@@ -48,6 +53,12 @@ namespace Lab_6_Particles.ObjectsGroups
             {
                 centralObject.ObjectAttraction(obj);
             }
+        }
+
+        public void createSatelite(int asteroidRadius)
+        {
+            centralObject.Radius -= 7 - asteroidRadius;
+            objects.Add(new Satellite(centralObject.X, centralObject.Y, centralObject.Radius, 7 - asteroidRadius, Color.LightGray, rand.Next() % 360));
         }
     }
 }

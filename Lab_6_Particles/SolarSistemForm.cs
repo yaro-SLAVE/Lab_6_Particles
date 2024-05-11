@@ -38,19 +38,19 @@ namespace Lab_6_Particles
 
             spaceObjects.Add(SolarSistem.centralObject);
 
-            SolarSistem.groups.Add(new GroupOfObjects(SolarSistem.X, SolarSistem.Y, 90, 10, Color.Maroon));
+            SolarSistem.groups.Add(new GroupOfObjects(SolarSistem.X, SolarSistem.Y, 100, 10, Color.Maroon));
 
-            SolarSistem.groups.Add(new GroupOfObjects(SolarSistem.X, SolarSistem.Y, 150, 20, Color.Brown));
+            SolarSistem.groups.Add(new GroupOfObjects(SolarSistem.X, SolarSistem.Y, 180, 20, Color.Brown));
 
-            SolarSistem.groups.Add(new GroupOfObjects(SolarSistem.X, SolarSistem.Y, 240, 20, Color.Blue));
+            SolarSistem.groups.Add(new GroupOfObjects(SolarSistem.X, SolarSistem.Y, 270, 20, Color.Blue));
 
             SolarSistem.groups.ElementAt(2).objects.Add(new Satellite(SolarSistem.groups.ElementAt(2).X, SolarSistem.groups.ElementAt(2).Y, 45, 5, Color.LightGray, 270));
 
             SolarSistem.groups.ElementAt(2).objects.Add(new Satellite(SolarSistem.groups.ElementAt(2).X, SolarSistem.groups.ElementAt(2).Y, 45, 3, Color.LightGray, 90));
 
-            SolarSistem.groups.ElementAt(1).objects.Add(new Satellite(SolarSistem.groups.ElementAt(1).X, SolarSistem.groups.ElementAt(1).Y, 35, 3, Color.Green, 270));
+            SolarSistem.groups.ElementAt(1).objects.Add(new Satellite(SolarSistem.groups.ElementAt(1).X, SolarSistem.groups.ElementAt(1).Y, 45, 3, Color.LightGray, 270));
 
-            SolarSistem.groups.ElementAt(1).objects.Add(new Satellite(SolarSistem.groups.ElementAt(1).X, SolarSistem.groups.ElementAt(1).Y, 35, 3, Color.Pink, 90));
+            SolarSistem.groups.ElementAt(1).objects.Add(new Satellite(SolarSistem.groups.ElementAt(1).X, SolarSistem.groups.ElementAt(1).Y, 45, 3, Color.LightGray, 90));
 
             foreach (ObjectGroup group in SolarSistem.groups)
             {
@@ -163,6 +163,17 @@ namespace Lab_6_Particles
                     planet.bang = null;
                 };
 
+                planet.Damage = asteroid.Weight;
+
+                foreach (GroupOfObjects group in SolarSistem.groups)
+                {
+                    if (group.centralObject.Equals(planet))
+                    {
+                        group.createSatelite(asteroid.Radius);
+                        break;
+                    }
+                }
+
                 this.asteroidReset();
             };
 
@@ -172,7 +183,6 @@ namespace Lab_6_Particles
 
                 sun.bang.finishedSize += () =>
                 {
-                    Console.WriteLine("stop");
                     sun.bang = null;
                 };
 

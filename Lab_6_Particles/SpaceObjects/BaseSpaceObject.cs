@@ -30,7 +30,7 @@ namespace Lab_6_Particles.SpaceObjects
         public Action<BaseSpaceObject, BaseSpaceObject> onObjectOverlap;
         public Action<BaseSpaceObject, BaseSpaceObject> onGravitationZoneOverlap;
 
-        public void Render(Graphics g)
+        public virtual void Render(Graphics g)
         {
             var alpha = 255 - Damage;
             var color = Color.FromArgb(alpha, colorField);
