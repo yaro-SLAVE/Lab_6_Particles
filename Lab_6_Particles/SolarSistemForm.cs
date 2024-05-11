@@ -1,4 +1,5 @@
-﻿using Lab_6_Particles.ObjectsGroups;
+﻿using Lab_6_Particles.Events;
+using Lab_6_Particles.ObjectsGroups;
 using Lab_6_Particles.SpaceObjects;
 using System;
 using System.Collections.Generic;
@@ -14,13 +15,17 @@ namespace Lab_6_Particles
 {
     public partial class SolarSistemForm : Form
     {
+        private List<BaseSpaceObject> spaceObjects = new List<BaseSpaceObject>();
         private GroupOfGroups SolarSistem;
         private bool asteroidInSistem = false;
-        private Asteroid asteroid;
+        private Asteroid asteroid = new Asteroid();
 
         public SolarSistemForm()
         {
             InitializeComponent();
+
+            AngleLabel.Text = trackBar2.Value.ToString();
+            RadiusLabel.Text = RadiusBar.Value.ToString();
 
             display.Image = new Bitmap(display.Width, display.Height);
 
@@ -30,6 +35,8 @@ namespace Lab_6_Particles
                 X = display.Width / 2,
                 Y = display.Height / 2
             };
+
+            spaceObjects.Add(SolarSistem.centralObject);
 
             SolarSistem.groups.Add(new GroupOfObjects(SolarSistem.X, SolarSistem.Y, 90, 10, Color.Maroon));
 
@@ -45,22 +52,22 @@ namespace Lab_6_Particles
 
             SolarSistem.groups.ElementAt(1).objects.Add(new Satellite(SolarSistem.groups.ElementAt(1).X, SolarSistem.groups.ElementAt(1).Y, 35, 3, Color.Pink, 90));
 
-            /*
+            foreach (ObjectGroup group in SolarSistem.groups)
+            {
+                spaceObjects.Add(group.centralObject);
+            }
+
+            asteroid.onPlanetOverlap += (planet) =>
+            {
+            };
+
+            asteroid.onSunOverlap += (sun) =>
+            {
+            };
+
             asteroid.onGravitationZoneOverlap += (a, obj) =>
             {
-                obj.impactObject(a);
             };
-
-            asteroid.onObjectOverlap += (a, obj) =>
-            {
-
-            };
-
-            asteroid.onSunOverlap += (s) =>
-            {
-
-            };
-            */
         }
 
         private void displayTimer_Tick(object sender, EventArgs e)
@@ -68,32 +75,32 @@ namespace Lab_6_Particles
             using (var g = Graphics.FromImage(display.Image))
             {
                 g.Clear(Color.Black);
-                SolarSistem.Render(g);
                 SolarSistem.ObjectAttraction();
                 SolarSistem.UpdateState();
+                SolarSistem.Render(g);
 
                 if (asteroidInSistem)
                 {
                     asteroid.Render(g);
-                    SolarSistem.ImpactObject(asteroid);
+                    this.checkOverlaps(g);
                     asteroid.UpdateState();
 
                     if (asteroid.X < 0 || asteroid.Y < 0 || asteroid.Y > display.Height)
                     {
-                        asteroid = null;
-                        asteroidInSistem = false;
-                        readyButton.Enabled = true;
+                        this.asteroidReset();
                     }
+                }
+                else
+                {
+                    asteroid = null;
                 }
 
                 if (pullButton.Enabled)
                 {
                     int startX = display.Width;
                     int startY = display.Height / 2;
-                    int finishX = 0;
-                    double c = (double)startX / Math.Cos((double)trackBar2.Value / 180 * Math.PI);
-                    double sqrH = Math.Pow(c, 2) - Math.Pow((double)startX, 2);
-                    int finishY = (int)((double)startY - Math.Sqrt(sqrH));
+                    int finishX = (int)(startX - Math.Cos((double)trackBar2.Value / 180 * Math.PI) * display.Width);
+                    int finishY = (int)(startY - Math.Sin((double)trackBar2.Value / 180 * Math.PI) * display.Height);
 
                     g.DrawLine(new Pen(Color.Orange),
                         startX, startY, finishX, finishY);
@@ -101,6 +108,22 @@ namespace Lab_6_Particles
             }
 
             display.Invalidate();
+        }
+
+        private void checkOverlaps(Graphics g)
+        {
+            foreach (BaseSpaceObject obj in spaceObjects.ToList())
+            {
+                if (asteroid != null && asteroid.overlapsObject(obj, g))
+                {
+                    asteroid.objectOverlap(obj);
+                }
+
+                if (asteroid != null && asteroid.overlapsGravitationZone(obj, g))
+                {
+                    asteroid.gravitationZoneOverlap(obj);
+                }
+            }
         }
 
         private void trackBar1_Scroll(object sender, EventArgs e)
@@ -117,7 +140,7 @@ namespace Lab_6_Particles
             }
             else
             {
-                readyButton.Text = "Разгатовить астероид";
+                readyButton.Text = "Разготовить астероид";
                 pullButton.Enabled = true;
             }
         }
@@ -129,7 +152,53 @@ namespace Lab_6_Particles
             pullButton.Enabled = false;
             readyButton.Text = "Подготовить астероид";
 
-            asteroid = new Asteroid(display.Width, display.Height / 2, 5, trackBar2.Value);
+            asteroid = new Asteroid(display.Width, display.Height / 2, RadiusBar.Value, trackBar2.Value);
+
+            asteroid.onPlanetOverlap += (planet) =>
+            {
+                planet.bang = new Bang(planet, asteroid.X, asteroid.Y, asteroid.Radius);
+                
+                planet.bang.finishedSize += () =>
+                {
+                    planet.bang = null;
+                };
+
+                this.asteroidReset();
+            };
+
+            asteroid.onSunOverlap += (sun) =>
+            {
+                sun.bang = new Bang(sun, asteroid.X, asteroid.Y, asteroid.Radius);
+
+                sun.bang.finishedSize += () =>
+                {
+                    Console.WriteLine("stop");
+                    sun.bang = null;
+                };
+
+                this.asteroidReset();
+            };
+
+            asteroid.onGravitationZoneOverlap += (a, obj) =>
+            {
+                obj.ImpactObject(a);
+            };
+        }
+
+        private void trackBar2_Scroll(object sender, EventArgs e)
+        {
+            AngleLabel.Text = trackBar2.Value.ToString();
+        }
+
+        private void RadiusBar_Scroll(object sender, EventArgs e)
+        {
+            RadiusLabel.Text = RadiusBar.Value.ToString();
+        }
+
+        private void asteroidReset()
+        {
+            asteroidInSistem = false;
+            readyButton.Enabled = true;
         }
     }
 }

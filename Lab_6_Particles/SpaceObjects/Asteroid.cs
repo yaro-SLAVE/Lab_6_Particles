@@ -12,7 +12,9 @@ namespace Lab_6_Particles.SpaceObjects
         public float StartTraectoryAngle = 180;
 
         public Action<Sun> onSunOverlap;
+        public Action<Planet> onPlanetOverlap;
         
+        public Asteroid() { }
 
         public Asteroid(float X, float Y, int Radius, float angle)
         {
@@ -21,7 +23,7 @@ namespace Lab_6_Particles.SpaceObjects
             this.Radius = Radius;
             this.StartTraectoryAngle += angle;
             colorField = Color.White;
-            float speed = 3;
+            float speed = 6;
             this.SpeedX = (float)(speed * Math.Cos(StartTraectoryAngle / 180 * Math.PI));
             this.SpeedY = (float)(speed * Math.Sin(StartTraectoryAngle / 180 * Math.PI));
             this.Weight = Radius * 10;
@@ -31,6 +33,21 @@ namespace Lab_6_Particles.SpaceObjects
         {
             this.X += this.SpeedX;
             this.Y += this.SpeedY;
+        }
+
+        public override void objectOverlap(BaseSpaceObject obj)
+        {
+            base.objectOverlap(obj);
+
+            if (obj is Planet)
+            {
+                onPlanetOverlap(obj as Planet);
+            }
+
+            else if (obj is Sun) 
+            { 
+                onSunOverlap(obj as Sun);
+            }
         }
     }
 }

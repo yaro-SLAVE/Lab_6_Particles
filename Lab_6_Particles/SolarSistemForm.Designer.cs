@@ -35,9 +35,13 @@
             this.readyButton = new System.Windows.Forms.Button();
             this.displayTimer = new System.Windows.Forms.Timer(this.components);
             this.pullButton = new System.Windows.Forms.Button();
+            this.AngleLabel = new System.Windows.Forms.Label();
+            this.RadiusLabel = new System.Windows.Forms.Label();
+            this.RadiusBar = new System.Windows.Forms.TrackBar();
             ((System.ComponentModel.ISupportInitialize)(this.display)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.RadiusBar)).BeginInit();
             this.SuspendLayout();
             // 
             // display
@@ -66,6 +70,7 @@
             this.trackBar2.Name = "trackBar2";
             this.trackBar2.Size = new System.Drawing.Size(201, 69);
             this.trackBar2.TabIndex = 1;
+            this.trackBar2.Scroll += new System.EventHandler(this.trackBar2_Scroll);
             // 
             // readyButton
             // 
@@ -94,11 +99,45 @@
             this.pullButton.UseVisualStyleBackColor = true;
             this.pullButton.Click += new System.EventHandler(this.pullButton_Click);
             // 
+            // AngleLabel
+            // 
+            this.AngleLabel.AutoSize = true;
+            this.AngleLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.AngleLabel.Location = new System.Drawing.Point(1584, 96);
+            this.AngleLabel.Name = "AngleLabel";
+            this.AngleLabel.Size = new System.Drawing.Size(35, 37);
+            this.AngleLabel.TabIndex = 5;
+            this.AngleLabel.Text = "0";
+            // 
+            // RadiusLabel
+            // 
+            this.RadiusLabel.AutoSize = true;
+            this.RadiusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.RadiusLabel.Location = new System.Drawing.Point(1584, 327);
+            this.RadiusLabel.Name = "RadiusLabel";
+            this.RadiusLabel.Size = new System.Drawing.Size(35, 37);
+            this.RadiusLabel.TabIndex = 6;
+            this.RadiusLabel.Text = "0";
+            // 
+            // RadiusBar
+            // 
+            this.RadiusBar.Location = new System.Drawing.Point(1379, 318);
+            this.RadiusBar.Maximum = 6;
+            this.RadiusBar.Minimum = 3;
+            this.RadiusBar.Name = "RadiusBar";
+            this.RadiusBar.Size = new System.Drawing.Size(201, 69);
+            this.RadiusBar.TabIndex = 1;
+            this.RadiusBar.Value = 3;
+            this.RadiusBar.Scroll += new System.EventHandler(this.RadiusBar_Scroll);
+            // 
             // SolarSistemForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1677, 944);
+            this.Controls.Add(this.RadiusBar);
+            this.Controls.Add(this.RadiusLabel);
+            this.Controls.Add(this.AngleLabel);
             this.Controls.Add(this.pullButton);
             this.Controls.Add(this.readyButton);
             this.Controls.Add(this.trackBar2);
@@ -110,6 +149,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.display)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.RadiusBar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -123,5 +163,8 @@
         private System.Windows.Forms.Button readyButton;
         private System.Windows.Forms.Timer displayTimer;
         private System.Windows.Forms.Button pullButton;
+        private System.Windows.Forms.Label AngleLabel;
+        private System.Windows.Forms.Label RadiusLabel;
+        private System.Windows.Forms.TrackBar RadiusBar;
     }
 }

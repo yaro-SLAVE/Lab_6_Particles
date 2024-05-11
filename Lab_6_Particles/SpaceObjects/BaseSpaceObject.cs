@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lab_6_Particles.Events;
+using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
@@ -24,8 +25,10 @@ namespace Lab_6_Particles.SpaceObjects
         public float AngleTick = 2;
         public float G = 1.5f;
 
-        public Action<BaseSpaceObject, BaseSpaceObject> onGravitationZoneOverlap;
+        public Bang bang;
+
         public Action<BaseSpaceObject, BaseSpaceObject> onObjectOverlap;
+        public Action<BaseSpaceObject, BaseSpaceObject> onGravitationZoneOverlap;
 
         public void Render(Graphics g)
         {
@@ -36,6 +39,12 @@ namespace Lab_6_Particles.SpaceObjects
             g.FillEllipse(b, X - Radius, Y- Radius, Radius * 2, Radius * 2);
 
             b.Dispose();
+
+            if (bang != null )
+            {
+                bang.Render(g, X, Y);
+                bang.updateRadius();
+            }
         }
 
         public virtual void ObjectAttraction(BaseSpaceObject spaceObject)
@@ -52,35 +61,41 @@ namespace Lab_6_Particles.SpaceObjects
             Y = MoveY;
         }
 
-        public virtual void overlap(BaseSpaceObject obj)
+        public virtual bool overlapsObject(BaseSpaceObject obj, Graphics g)
         {
-            if (this.onGravitationZoneOverlap != null)
-            {
-                this.onGravitationZoneOverlap(this, obj);
-            }
+            var path1 = this.getObjectGraphicsPath();
+            var path2 = obj.getObjectGraphicsPath();
 
-            if (this.onObjectOverlap != null)
-            {
-                this.onObjectOverlap(this, obj);
-            }
+            path1.Transform(this.getTransform());
+            path2.Transform(obj.getTransform());
+
+            var region = new Region(path1);
+            region.Intersect(path2);
+            return !region.IsEmpty(g);
         }
 
         public virtual bool overlapsGravitationZone(BaseSpaceObject obj, Graphics g)
         {
-            return true;
+            var path1 = this.getObjectGraphicsPath();
+            var path2 = obj.getGravitationZoneGraphicsPath();
+
+            path1.Transform(this.getTransform());
+            path2.Transform(obj.getTransform());
+
+            var region = new Region(path1);
+            region.Intersect(path2);
+            return !region.IsEmpty(g);
         }
 
-        public virtual bool overlapsObject(BaseSpaceObject obj, Graphics g)
+        public Matrix getTransform()
         {
-            return true;
+            var matrix = new Matrix();
+            matrix.Translate(this.X, this.Y);
+
+            return matrix;
         }
 
-        public GraphicsPath getGravitationZoneGraphicsPath()
-        {
-            var path = new GraphicsPath();
-            path.AddEllipse(-(this.Radius + this.Power), -(this.Radius + this.Power), (this.Radius + this.Power) * 2, (this.Radius + this.Power) * 2);
-            return path;
-        }
+
 
         public GraphicsPath getObjectGraphicsPath()
         {
@@ -89,17 +104,35 @@ namespace Lab_6_Particles.SpaceObjects
             return path;
         }
 
+        public GraphicsPath getGravitationZoneGraphicsPath()
+        {
+            var path = new GraphicsPath();
+            path.AddEllipse(-this.Power, -this.Power, this.Power * 2, this.Power * 2);
+            return path;
+        }
+
         public void ImpactObject(BaseSpaceObject obj)
         {
             float gX = X - obj.X;
             float gY = Y - obj.Y;
+            float r = (float)Math.Max(this.Power, gX * gX + gY * gY);
+            obj.SpeedX += gX * Power / r;
+            obj.SpeedY += gY * Power / r;
+        }
 
-            double r = Math.Sqrt(gX * gX + gY * gY);
-            if (r + obj.Radius < Power)
+        public virtual void objectOverlap(BaseSpaceObject obj)
+        {
+            if (this.onObjectOverlap != null)
             {
-                float r2 = (float)Math.Max(100, gX * gX + gY * gY);
-                obj.SpeedX += gX * Power / r2;
-                obj.SpeedY += gY * Power / r2;
+                this.onObjectOverlap(this, obj);
+            }
+        }
+
+        public virtual void gravitationZoneOverlap(BaseSpaceObject obj)
+        {
+            if (this.onGravitationZoneOverlap != null)
+            {
+                this.onGravitationZoneOverlap(this, obj);
             }
         }
     }

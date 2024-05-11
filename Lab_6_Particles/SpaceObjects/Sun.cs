@@ -15,7 +15,7 @@ namespace Lab_6_Particles.SpaceObjects
             Y = y;
             Radius = 45;
             Weight = 100;
-            Power = 800;
+            Power = 400;
             colorField = Color.Yellow;
             MoveX = 0;
             MoveY = 0;
