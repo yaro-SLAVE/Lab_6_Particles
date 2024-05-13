@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="AntiGravityPoint.cs" />
     <Compile Include="Emitter.cs" />
+    <Compile Include="Events\Bang.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -56,10 +57,24 @@
     </Compile>
     <Compile Include="GravityPoint.cs" />
     <Compile Include="IImpactPoint.cs" />
+    <Compile Include="ObjectsGroups\GroupOfGroups.cs" />
+    <Compile Include="ObjectsGroups\GroupOfObjects.cs" />
+    <Compile Include="ObjectsGroups\ObjectGroup.cs" />
     <Compile Include="Particle.cs" />
     <Compile Include="ParticleColorful.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SolarSistemForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SolarSistemForm.Designer.cs">
+      <DependentUpon>SolarSistemForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SpaceObjects\Asteroid.cs" />
+    <Compile Include="SpaceObjects\BaseSpaceObject.cs" />
+    <Compile Include="SpaceObjects\Planet.cs" />
+    <Compile Include="SpaceObjects\Satellite.cs" />
+    <Compile Include="SpaceObjects\Sun.cs" />
     <Compile Include="TopEmitter.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
@@ -73,6 +88,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="SolarSistemForm.resx">
+      <DependentUpon>SolarSistemForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -86,5 +104,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
