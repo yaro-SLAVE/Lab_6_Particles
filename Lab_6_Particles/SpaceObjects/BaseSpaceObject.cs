@@ -1,7 +1,9 @@
 ﻿using Lab_6_Particles.Events;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
 
 namespace Lab_6_Particles.SpaceObjects
 {
@@ -25,7 +27,7 @@ namespace Lab_6_Particles.SpaceObjects
         public float AngleTick = 2;
         public float G = 1.5f;
 
-        public Bang bang;
+        public List<Bang> bangs = new List<Bang>();
 
         public Action<BaseSpaceObject, BaseSpaceObject> onObjectOverlap;
         public Action<BaseSpaceObject, BaseSpaceObject> onGravitationZoneOverlap;
@@ -40,10 +42,13 @@ namespace Lab_6_Particles.SpaceObjects
 
             b.Dispose();
 
-            if (bang != null )
+            if (bangs.Count != 0)
             {
-                bang.Render(g, X, Y);
-                bang.updateRadius();
+                foreach(var bang in bangs.ToArray())
+                {
+                    bang.Render(g, X, Y);
+                    bang.updateRadius();
+                }
             }
         }
 

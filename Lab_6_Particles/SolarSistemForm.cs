@@ -17,8 +17,7 @@ namespace Lab_6_Particles
     {
         private List<BaseSpaceObject> spaceObjects = new List<BaseSpaceObject>();
         private GroupOfGroups SolarSistem;
-        private bool asteroidInSistem = false;
-        private Asteroid asteroid = new Asteroid();
+        private List<Asteroid> asteroids = new List<Asteroid>();
 
         public SolarSistemForm()
         {
@@ -52,22 +51,10 @@ namespace Lab_6_Particles
 
             SolarSistem.groups.ElementAt(1).objects.Add(new Satellite(SolarSistem.groups.ElementAt(1).X, SolarSistem.groups.ElementAt(1).Y, 45, 3, Color.LightGray, 90));
 
-            foreach (ObjectGroup group in SolarSistem.groups)
+            SolarSistem.groups.ForEach(group =>
             {
                 spaceObjects.Add(group.centralObject);
-            }
-
-            asteroid.onPlanetOverlap += (planet) =>
-            {
-            };
-
-            asteroid.onSunOverlap += (sun) =>
-            {
-            };
-
-            asteroid.onGravitationZoneOverlap += (a, obj) =>
-            {
-            };
+            });
         }
 
         private void displayTimer_Tick(object sender, EventArgs e)
@@ -79,20 +66,19 @@ namespace Lab_6_Particles
                 SolarSistem.UpdateState();
                 SolarSistem.Render(g);
 
-                if (asteroidInSistem)
+                if (asteroids.Count > 0)
                 {
-                    asteroid.Render(g);
-                    this.checkOverlaps(g);
-                    asteroid.UpdateState();
-
-                    if (asteroid.X < 0 || asteroid.Y < 0 || asteroid.Y > display.Height)
+                    foreach (var asteroid in asteroids.ToArray())
                     {
-                        this.asteroidReset();
+                        asteroid.Render(g);
+                        this.checkOverlaps(g);
+                        asteroid.UpdateState();
+
+                        if (asteroid.X < 0 || asteroid.Y < 0 || asteroid.Y > display.Height)
+                        {
+                            asteroids.Remove(asteroid);
+                        }
                     }
-                }
-                else
-                {
-                    asteroid = null;
                 }
 
                 if (pullButton.Enabled)
@@ -112,16 +98,19 @@ namespace Lab_6_Particles
 
         private void checkOverlaps(Graphics g)
         {
-            foreach (BaseSpaceObject obj in spaceObjects.ToList())
+            foreach (BaseSpaceObject obj in spaceObjects.ToArray())
             {
-                if (asteroid != null && asteroid.overlapsObject(obj, g))
+                foreach (var asteroid in asteroids.ToArray())
                 {
-                    asteroid.objectOverlap(obj);
-                }
+                    if (asteroid != null && asteroid.overlapsObject(obj, g))
+                    {
+                        asteroid.objectOverlap(obj);
+                    }
 
-                if (asteroid != null && asteroid.overlapsGravitationZone(obj, g))
-                {
-                    asteroid.gravitationZoneOverlap(obj);
+                    if (asteroid != null && asteroid.overlapsGravitationZone(obj, g))
+                    {
+                        asteroid.gravitationZoneOverlap(obj);
+                    }
                 }
             }
         }
@@ -147,52 +136,55 @@ namespace Lab_6_Particles
 
         private void pullButton_Click(object sender, EventArgs e)
         {
-            asteroidInSistem = true;
-            readyButton.Enabled = false;
-            pullButton.Enabled = false;
             readyButton.Text = "Подготовить астероид";
 
-            asteroid = new Asteroid(display.Width, display.Height / 2, RadiusBar.Value, trackBar2.Value);
+            var asteroid = new Asteroid(display.Width, display.Height / 2, RadiusBar.Value, trackBar2.Value);
 
             asteroid.onPlanetOverlap += (planet) =>
             {
-                planet.bang = new Bang(planet, asteroid.X, asteroid.Y, asteroid.Radius);
-                
-                planet.bang.finishedSize += () =>
+                Bang bang = new Bang(planet, asteroid.X, asteroid.Y, asteroid.Radius);
+
+                bang.finishedSize += () =>
                 {
-                    planet.bang = null;
+                    planet.bangs.Remove(bang);
+                    bang = null;                    
                 };
+
+                asteroids.Remove(asteroid);
+
+                planet.bangs.Add(bang);
 
                 planet.Damage = asteroid.Weight;
 
-                foreach (GroupOfObjects group in SolarSistem.groups)
+                SolarSistem.groups.ForEach(group =>
                 {
                     if (group.centralObject.Equals(planet))
                     {
                         group.createSatelite(asteroid.Radius);
-                        break;
                     }
-                }
-
-                this.asteroidReset();
+                });
             };
 
             asteroid.onSunOverlap += (sun) =>
             {
-                sun.bang = new Bang(sun, asteroid.X, asteroid.Y, asteroid.Radius);
+                Bang bang = new Bang(sun, asteroid.X, asteroid.Y, asteroid.Radius);
 
-                sun.bang.finishedSize += () =>
+                bang.finishedSize += () =>
                 {
-                    sun.bang = null;
+                    sun.bangs.Remove(bang);
+                    bang = null;
                 };
 
-                this.asteroidReset();
+                asteroids.Remove(asteroid);
+                sun.bangs.Add(bang);
             };
 
             asteroid.onGravitationZoneOverlap += (a, obj) =>
             {
                 obj.ImpactObject(a);
             };
+
+            asteroids.Add(asteroid);
         }
 
         private void trackBar2_Scroll(object sender, EventArgs e)
@@ -205,10 +197,9 @@ namespace Lab_6_Particles
             RadiusLabel.Text = RadiusBar.Value.ToString();
         }
 
-        private void asteroidReset()
+        private void destroyGroup(GroupOfObjects group)
         {
-            asteroidInSistem = false;
-            readyButton.Enabled = true;
+
         }
     }
 }
