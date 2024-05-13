@@ -9,6 +9,7 @@ namespace Lab_6_Particles.SpaceObjects
 {
     public class Planet : BaseSpaceObject
     {
+
         public Planet(float X, float Y, int PerihelionRadius, int Radius, Color color)
         {
             this.X = X;
@@ -21,7 +22,8 @@ namespace Lab_6_Particles.SpaceObjects
 
             this.Power = (float)(15 * Radius);
 
-            this.Weight = Radius * 50;
+            this.WeightCoef = 50;
+            this.Weight = Radius * WeightCoef;
         }
     }
 }

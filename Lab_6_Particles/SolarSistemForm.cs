@@ -54,6 +54,11 @@ namespace Lab_6_Particles
             SolarSistem.groups.ForEach(group =>
             {
                 spaceObjects.Add(group.centralObject);
+
+                group.destroyPlanet += () =>
+                {
+                    destroyGroup(group);
+                };
             });
         }
 
@@ -138,6 +143,11 @@ namespace Lab_6_Particles
         {
             readyButton.Text = "Подготовить астероид";
 
+            this.addAsteroid();
+        }
+
+        private void addAsteroid()
+        {
             var asteroid = new Asteroid(display.Width, display.Height / 2, RadiusBar.Value, trackBar2.Value);
 
             asteroid.onPlanetOverlap += (planet) =>
@@ -147,7 +157,58 @@ namespace Lab_6_Particles
                 bang.finishedSize += () =>
                 {
                     planet.bangs.Remove(bang);
-                    bang = null;                    
+                    bang = null;
+                };
+
+                asteroids.Remove(asteroid);
+
+                planet.bangs.Add(bang);
+
+                planet.Damage = asteroid.Weight;
+
+                foreach (var group in SolarSistem.groups.ToArray())
+                {
+                    if (group.centralObject.Equals(planet))
+                    {
+                        group.createSatelite(asteroid);
+                    }
+                }
+            };
+
+            asteroid.onSunOverlap += (sun) =>
+            {
+                Bang bang = new Bang(sun, asteroid.X, asteroid.Y, asteroid.Radius);
+
+                bang.finishedSize += () =>
+                {
+                    sun.bangs.Remove(bang);
+                    bang = null;
+                };
+
+                asteroids.Remove(asteroid);
+                sun.bangs.Add(bang);
+            };
+
+            asteroid.onGravitationZoneOverlap += (a, obj) =>
+            {
+                obj.ImpactObject(a);
+            };
+
+            asteroids.Add(asteroid);
+        }
+
+        private void addAsteroid(float X, float Y, int radius, float angle)
+        {
+            var asteroid = new Asteroid(X, Y, radius, angle);
+
+            asteroid.onPlanetOverlap += (planet) =>
+            {
+                Bang bang = new Bang(planet, asteroid.X, asteroid.Y, asteroid.Radius);
+
+                bang.finishedSize += () =>
+                {
+                    planet.bangs.Remove(bang);
+                    bang = null;
                 };
 
                 asteroids.Remove(asteroid);
@@ -160,7 +221,7 @@ namespace Lab_6_Particles
                 {
                     if (group.centralObject.Equals(planet))
                     {
-                        group.createSatelite(asteroid.Radius);
+                        group.createSatelite(asteroid);
                     }
                 });
             };
@@ -199,7 +260,25 @@ namespace Lab_6_Particles
 
         private void destroyGroup(GroupOfObjects group)
         {
+            var bang = new Bang(group.X, group.Y, group.centralObject.Radius);
 
+            bang.finishedSize += () =>
+            {
+                SolarSistem.bangs.Remove(bang);
+                bang = null;
+            };
+
+            SolarSistem.bangs.Add(bang);
+
+            group.centralObject = null;
+
+            foreach (var obj in group.objects.ToArray())
+            {
+                addAsteroid(obj.X, obj.Y, obj.Radius, obj.AnglePosition);
+                group.objects.Remove(obj);
+            }
+
+            SolarSistem.groups.Remove(group);
         }
     }
 }

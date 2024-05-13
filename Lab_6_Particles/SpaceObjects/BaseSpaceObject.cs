@@ -26,6 +26,7 @@ namespace Lab_6_Particles.SpaceObjects
         public float AnglePosition = 270;
         public float AngleTick = 2;
         public float G = 1.5f;
+        public int WeightCoef;
 
         public List<Bang> bangs = new List<Bang>();
 

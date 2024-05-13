@@ -26,7 +26,9 @@ namespace Lab_6_Particles.SpaceObjects
             float speed = 6;
             this.SpeedX = (float)(speed * Math.Cos(StartTraectoryAngle / 180 * Math.PI));
             this.SpeedY = (float)(speed * Math.Sin(StartTraectoryAngle / 180 * Math.PI));
-            this.Weight = Radius * 35;
+
+            this.WeightCoef = 35;
+            this.Weight = Radius * WeightCoef;
         }
 
         public override void UpdateState()

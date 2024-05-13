@@ -13,6 +13,8 @@ namespace Lab_6_Particles.ObjectsGroups
         public List<Satellite> objects = new List<Satellite>();
         private static Random rand = new Random();
 
+        public Action destroyPlanet;
+
         public GroupOfObjects(float X, float Y, int PerihelionRadius, int Radius, Color color)
         {
             centralObject = new Planet(X, Y, PerihelionRadius, Radius, color);
@@ -55,10 +57,18 @@ namespace Lab_6_Particles.ObjectsGroups
             }
         }
 
-        public void createSatelite(int asteroidRadius)
+        public void createSatelite(Asteroid asteroid)
         {
-            centralObject.Radius -= 7 - asteroidRadius;
-            objects.Add(new Satellite(centralObject.X, centralObject.Y, centralObject.Radius, 7 - asteroidRadius, Color.LightGray, rand.Next() % 360));
+            int planetWeight = this.centralObject.Weight;
+
+            centralObject.Radius -= 7 - asteroid.Radius;
+            centralObject.Weight = centralObject.Radius * centralObject.WeightCoef;
+            objects.Add(new Satellite(centralObject.X, centralObject.Y, centralObject.Radius, 7 - asteroid.Radius, Color.LightGray, rand.Next() % 360));
+
+            if (asteroid.Weight > planetWeight / 4)
+            {
+                this.destroyPlanet();
+            }
         }
     }
 }
