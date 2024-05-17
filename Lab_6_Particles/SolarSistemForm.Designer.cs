@@ -38,6 +38,7 @@
             this.AngleLabel = new System.Windows.Forms.Label();
             this.RadiusLabel = new System.Windows.Forms.Label();
             this.RadiusBar = new System.Windows.Forms.TrackBar();
+            this.addedPlanetButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.display)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
@@ -130,11 +131,22 @@
             this.RadiusBar.Value = 3;
             this.RadiusBar.Scroll += new System.EventHandler(this.RadiusBar_Scroll);
             // 
+            // addedPlanetButton
+            // 
+            this.addedPlanetButton.Location = new System.Drawing.Point(1393, 443);
+            this.addedPlanetButton.Name = "addedPlanetButton";
+            this.addedPlanetButton.Size = new System.Drawing.Size(173, 61);
+            this.addedPlanetButton.TabIndex = 7;
+            this.addedPlanetButton.Text = "Добавить планету";
+            this.addedPlanetButton.UseVisualStyleBackColor = true;
+            this.addedPlanetButton.Click += new System.EventHandler(this.addedPlanetButton_Click);
+            // 
             // SolarSistemForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1677, 944);
+            this.Controls.Add(this.addedPlanetButton);
             this.Controls.Add(this.RadiusBar);
             this.Controls.Add(this.RadiusLabel);
             this.Controls.Add(this.AngleLabel);
@@ -166,5 +178,6 @@
         private System.Windows.Forms.Label AngleLabel;
         private System.Windows.Forms.Label RadiusLabel;
         private System.Windows.Forms.TrackBar RadiusBar;
+        private System.Windows.Forms.Button addedPlanetButton;
     }
 }

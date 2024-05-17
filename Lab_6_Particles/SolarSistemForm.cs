@@ -18,6 +18,7 @@ namespace Lab_6_Particles
         private List<BaseSpaceObject> spaceObjects = new List<BaseSpaceObject>();
         private GroupOfGroups SolarSistem;
         private List<Asteroid> asteroids = new List<Asteroid>();
+        private Random rand = new Random();
 
         public SolarSistemForm()
         {
@@ -217,13 +218,13 @@ namespace Lab_6_Particles
 
                 planet.Damage = asteroid.Weight;
 
-                SolarSistem.groups.ForEach(group =>
+                foreach (GroupOfObjects group in SolarSistem.groups.ToArray())
                 {
                     if (group.centralObject.Equals(planet))
                     {
                         group.createSatelite(asteroid);
                     }
-                });
+                }
             };
 
             asteroid.onSunOverlap += (sun) =>
@@ -270,6 +271,7 @@ namespace Lab_6_Particles
 
             SolarSistem.bangs.Add(bang);
 
+            spaceObjects.Remove(group.centralObject);
             group.centralObject = null;
 
             foreach (var obj in group.objects.ToArray())
@@ -279,6 +281,35 @@ namespace Lab_6_Particles
             }
 
             SolarSistem.groups.Remove(group);
+        }
+
+        private void addedPlanetButton_Click(object sender, EventArgs e)
+        {
+            var i = rand.Next() % 3;
+            var perRad = 0;
+            switch(i)
+            {
+                case 0:
+                    perRad = 100;
+                    break;
+
+                case 1:
+                    perRad = 180;
+                    break;
+
+                case 2:
+                    perRad = 270;
+                    break;
+            }
+
+            SolarSistem.groups.Add(new GroupOfObjects(SolarSistem.X, SolarSistem.Y, perRad, 15, Color.Green));
+            GroupOfObjects group = SolarSistem.groups.Last();
+            spaceObjects.Add(group.centralObject);
+
+            group.destroyPlanet += () =>
+            {
+                destroyGroup(group);
+            };
         }
     }
 }
